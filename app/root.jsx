@@ -9,6 +9,7 @@ import {
   useNavigation,
   useRouteError,
 } from '@remix-run/react';
+import { cssBundleHref } from '@remix-run/css-bundle';
 import { createCookieSessionStorage, json } from '@remix-run/cloudflare';
 import { ThemeProvider, themeStyles } from '~/components/theme-provider';
 import GothamBook from '~/assets/fonts/gotham-book.woff2';
@@ -23,28 +24,36 @@ import styles from './root.module.css';
 import './reset.module.css';
 import './global.module.css';
 
-export const links = () => [
-  {
-    rel: 'preload',
-    href: GothamMedium,
-    as: 'font',
-    type: 'font/woff2',
-    crossOrigin: 'true',
-  },
-  {
-    rel: 'preload',
-    href: GothamBook,
-    as: 'font',
-    type: 'font/woff2',
-    crossOrigin: 'true',
-  },
-  { rel: 'manifest', href: '/manifest.json' },
-  { rel: 'icon', href: '/favicon.ico' },
-  { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
-  { rel: 'shortcut_icon', href: '/shortcut.png', type: 'image/png', sizes: '64x64' },
-  { rel: 'apple-touch-icon', href: '/icon-256.png', sizes: '256x256' },
-  { rel: 'author', href: '/humans.txt', type: 'text/plain' },
-];
+export const links = () => {
+  return [
+    ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
+    {
+      rel: 'preload',
+      href: GothamMedium,
+      as: 'font',
+      type: 'font/woff2',
+      crossOrigin: 'true',
+    },
+    {
+      rel: 'preload',
+      href: GothamBook,
+      as: 'font',
+      type: 'font/woff2',
+      crossOrigin: 'true',
+    },
+    { rel: 'manifest', href: '/manifest.json' },
+    { rel: 'icon', href: '/favicon.ico' },
+    { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
+    {
+      rel: 'shortcut_icon',
+      href: '/shortcut.png',
+      type: 'image/png',
+      sizes: '64x64',
+    },
+    { rel: 'apple-touch-icon', href: '/icon-256.png', sizes: '256x256' },
+    { rel: 'author', href: '/humans.txt', type: 'text/plain' },
+  ];
+};
 
 export const loader = async ({ request, context }) => {
   const { url } = request;
